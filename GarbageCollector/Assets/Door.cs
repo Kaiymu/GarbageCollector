@@ -1,11 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Door : MonoBehaviour {
+public class Door : CollisionHandler {
 
-	void OnTriggerEnter(Collider other) {
-		if(other.tag == "Player") {
-			DoorManager.numberPassed++;
+	public int index;
+
+	protected override void PlayerCollision (GameObject player) {
+		if(index == 0) {
+			GameManager.instance.UpdateDoorList(index);
+			index = -1;
 		}
 	}
 }
