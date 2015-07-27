@@ -4,7 +4,7 @@ using System.Collections;
 public class SoundManager : MonoBehaviour {
 
 	public static SoundManager instance;
-
+	
 	public AudioClip doorTriggerSound;
 	public AudioClip playerExplosion;
 

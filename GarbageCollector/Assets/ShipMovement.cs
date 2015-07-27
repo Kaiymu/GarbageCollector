@@ -5,6 +5,7 @@ public class ShipMovement : MonoBehaviour {
 
 	[Range(5, 15)]
 	public float speed = 5f;
+	public float maxSpeed = 15f;
 	public float speedRotation = 90f;
 
 	public CNAbstractController MovementJoystick;
@@ -35,7 +36,7 @@ public class ShipMovement : MonoBehaviour {
 			speed -= Time.deltaTime * 10;
 		}
 		
-		speed = Mathf.Clamp(speed, initialSpeed, 15);
+		speed = Mathf.Clamp(speed, initialSpeed, maxSpeed);
 		
 		transform.Rotate(
 			MovementJoystick.GetAxis("Vertical") * Time.deltaTime * speedRotation,

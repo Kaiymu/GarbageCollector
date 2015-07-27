@@ -44,7 +44,7 @@ public class UIManager : MonoBehaviour {
 
 	private void DisplayBestTime() {
 		for(int i = 0; i < bestTime.Length; i++) {
-			bestTime[i].text = GameManager.instance.BestTime().ToString();
+			bestTime[i].text = GameManager.instance.BestTime().ToString("f3");
 		}
 	}
 
@@ -56,7 +56,7 @@ public class UIManager : MonoBehaviour {
 
 	private void DisplayBestScore() {
 		for(int i = 0; i < bestScore.Length; i++) {
-			bestScore[i].text = GameManager.instance.BestScore().ToString();
+			bestScore[i].text = GameManager.instance.BestScore().ToString("f1");
 		}
 	}
 

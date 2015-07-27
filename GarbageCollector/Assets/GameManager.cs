@@ -46,6 +46,7 @@ public class GameManager : MonoBehaviour {
 	}	
 
 	private void Start() {
+
 		for(int i = 0; i < doorList.Count; i++) {
 			doorList[i].GetComponent<DoorTrigger>().index = i;
 		}
@@ -54,19 +55,32 @@ public class GameManager : MonoBehaviour {
 		_shipMovement = player.GetComponent<ShipMovement>();
 
 		FillLevelTimeArray();
-		FillLevelTimeArray();
+		FillLevelScoreArray();
 	}
 
 	private void FillLevelTimeArray() {
-		_levelTime[0] = PlayerPrefs.GetFloat("timelvl1");
+		Debug.Log (PlayerPrefs.GetFloat("timelvl1"));
+		if(PlayerPrefs.GetFloat("timelvl1") != 0) {
+			_levelTime[0] = PlayerPrefs.GetFloat("timelvl1");
+		} else {
+			_levelTime[0] = 9999;
+		}
+
+		Debug.Log (_levelTime[0]);
 		_levelTime[1] = PlayerPrefs.GetFloat("timelvl2");
 		_levelTime[2] = PlayerPrefs.GetFloat("timelvl3");
+
 	}
 
 	private void FillLevelScoreArray() {
-		_levelScore[0] = PlayerPrefs.GetFloat("scorelvl1");
+		if(PlayerPrefs.GetFloat("scorelvl1") != 0) {
+			_levelScore[0] = PlayerPrefs.GetFloat("scorelvl1");
+		} else {
+			_levelScore[0] = 0;
+		}
 		_levelScore[1] = PlayerPrefs.GetFloat("scorelvl2");
 		_levelScore[2] = PlayerPrefs.GetFloat("scorelvl3");
+
 	}
 	
 	public void UpdateDoorList(int indexToRemove) {
@@ -83,8 +97,6 @@ public class GameManager : MonoBehaviour {
 		Lose();
 
 		GameStatus();
-
-		Debug.Log (_levelScore[Application.loadedLevel-1]);
 	}
 
 	private void Win() {
@@ -177,17 +189,16 @@ public class GameManager : MonoBehaviour {
 	}
 
 	private void SaveScoreAndTime() {
-		int indexLevel = Application.loadedLevel-1;
-		_levelScore[indexLevel] = 50;
-		_levelTime[indexLevel] = 50;
-		if(CalculateScore() < _levelScore[indexLevel]) {
+		int indexLevel = Application.loadedLevel -1 ;
+
+		if(CalculateScore() > _levelScore[indexLevel]) {
 			_levelScore[indexLevel] = CalculateScore();
-			PlayerPrefs.SetFloat("scorelvl"+indexLevel, _levelScore[Application.loadedLevel]);
+			PlayerPrefs.SetFloat("scorelvl"+Application.loadedLevel, _levelScore[indexLevel]);
 		}
 
 		if(TimerSinceStart() < _levelTime[indexLevel]) {
 			_levelTime[indexLevel] = TimerSinceStart();
-			PlayerPrefs.SetFloat("timelvl"+indexLevel, _levelTime[Application.loadedLevel]);
+			PlayerPrefs.SetFloat("timelvl"+Application.loadedLevel, _levelTime[indexLevel]);
 		}
 	}
 
