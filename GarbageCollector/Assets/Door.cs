@@ -9,6 +9,8 @@ public class Door : CollisionHandler {
 		if(index == 0) {
 			GameManager.instance.UpdateDoorList(index);
 			index = -1;
+
+			SoundManager.instance.PlayDooSound();
 		}
 	}
 }

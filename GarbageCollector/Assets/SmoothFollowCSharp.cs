@@ -26,6 +26,18 @@ public class SmoothFollowCSharp : MonoBehaviour
 	// How much we 
 	public float heightDamping = 2.0f;
 	public float rotationDamping = 3.0f;
+
+	private ShipMovement _shipMovement;
+	private Camera _mainCamera;
+
+	private void Start() {
+		_shipMovement = target.GetComponent<ShipMovement>();
+		_mainCamera = GetComponent<Camera>();
+	}
+
+	private void Update() {
+		ChangeFOVAccelerating();
+	}
 	
 	void  LateUpdate ()
 	{
@@ -58,5 +70,11 @@ public class SmoothFollowCSharp : MonoBehaviour
 		
 		// Always look at the target
 		transform.LookAt (target);
+	}
+
+	private void ChangeFOVAccelerating() {
+
+		_mainCamera.fieldOfView = (_shipMovement.speed-5)*(90-60)/(15-5) + 60;
+		//_mainCamera.fieldOfView = Mathf.Clamp(_mainCamera.fieldOfView, 60, 90);
 	}
 }

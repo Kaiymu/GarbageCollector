@@ -3,12 +3,15 @@ using System.Collections;
 
 public class ShipMovement : MonoBehaviour {
 
-	[Range(5, 12)]
+	[Range(5, 15)]
 	public float speed = 5f;
 	public float speedRotation = 90f;
 
 	public CNAbstractController MovementJoystick;
 	public bool accelerating = false;
+
+	[HideInInspector]
+	public bool shipMoving = true;
 
 	private Transform shipTransform;
 
@@ -17,24 +20,29 @@ public class ShipMovement : MonoBehaviour {
 	private void Awake() {
 		initialSpeed = speed;
 	}
-	// Update is called once per frame
+
 	void Update () {
+		if(shipMoving) {
+			Moving();
+		}
+	}
+
+	private void Moving() {
 		if(accelerating) {
-			speed += Time.deltaTime;
+			speed += Time.deltaTime * 10;
 		}
 		else  {
-			speed -= Time.deltaTime;
+			speed -= Time.deltaTime * 10;
 		}
-
-		speed = Mathf.Clamp(speed, initialSpeed, 12);
-
-		Debug.Log (speed);
-		 transform.Rotate(
+		
+		speed = Mathf.Clamp(speed, initialSpeed, 15);
+		
+		transform.Rotate(
 			MovementJoystick.GetAxis("Vertical") * Time.deltaTime * speedRotation,
 			MovementJoystick.GetAxis("Horizontal") * Time.deltaTime * speedRotation,
 			0);
 		
-	
+		
 		transform.Translate(Vector3.forward * speed * Time.deltaTime);
 	}
 
