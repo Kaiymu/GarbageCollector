@@ -59,28 +59,25 @@ public class GameManager : MonoBehaviour {
 	}
 
 	private void FillLevelTimeArray() {
-		Debug.Log (PlayerPrefs.GetFloat("timelvl1"));
-		if(PlayerPrefs.GetFloat("timelvl1") != 0) {
-			_levelTime[0] = PlayerPrefs.GetFloat("timelvl1");
-		} else {
-			_levelTime[0] = 9999;
+		for(int i = 0; i < 3; i++) {
+			if(PlayerPrefs.GetFloat("timelvl"+i) != 0) {
+				_levelTime[i] = 999;
+			} else {
+				_levelTime[i] = 999;
+			}
 		}
-
-		Debug.Log (_levelTime[0]);
-		_levelTime[1] = PlayerPrefs.GetFloat("timelvl2");
-		_levelTime[2] = PlayerPrefs.GetFloat("timelvl3");
 
 	}
 
 	private void FillLevelScoreArray() {
-		if(PlayerPrefs.GetFloat("scorelvl1") != 0) {
-			_levelScore[0] = PlayerPrefs.GetFloat("scorelvl1");
-		} else {
-			_levelScore[0] = 0;
+		for(int i = 0; i < 3; i++) {
+			if(PlayerPrefs.GetFloat("scorelvl1"+i) != 0) {
+				_levelScore[i] = 0;
+			} else {
+				_levelScore[i] = 0;
+			}
 		}
-		_levelScore[1] = PlayerPrefs.GetFloat("scorelvl2");
-		_levelScore[2] = PlayerPrefs.GetFloat("scorelvl3");
-
+		
 	}
 	
 	public void UpdateDoorList(int indexToRemove) {
@@ -178,7 +175,6 @@ public class GameManager : MonoBehaviour {
 			case GAME_STATUS.LOSE :
 				_shipMovement.shipMoving = false;
 				calculateTime = false;
-				SaveScoreAndTime();
 			break;
 
 			case GAME_STATUS.PAUSE :

@@ -9,8 +9,7 @@ public class UIManager : MonoBehaviour {
 	public Text[] bestTime;
 	public Text[] finalScore; 
 	public Text[] bestScore;
-
-	public Text _debug;
+	
 	public GameObject gameMenu;
 	public GameObject pauseMenu;
 	public GameObject winMenu; 
