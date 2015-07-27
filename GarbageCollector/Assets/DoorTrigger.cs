@@ -1,16 +1,16 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Door : CollisionHandler {
+public class DoorTrigger : CollisionHandler {
 
 	public int index;
 
-	protected override void PlayerCollision (GameObject player) {
+	protected override void PlayerTrigger (GameObject player) {
 		if(index == 0) {
 			GameManager.instance.UpdateDoorList(index);
 			index = -1;
 
-			SoundManager.instance.PlayDooSound();
+			SoundManager.instance.PlayDoorSound();
 		}
 	}
 }

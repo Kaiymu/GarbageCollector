@@ -3,11 +3,21 @@ using System.Collections;
 
 public abstract class CollisionHandler : MonoBehaviour {
 
-	void OnTriggerEnter(Collider other) {
-		if(other.tag == "Player") {
-			PlayerCollision(other.gameObject);
+	void OnTriggerEnter(Collider col) {
+		if(col.tag == "Player") {
+			PlayerTrigger(col.gameObject);
 		}
 	}
 
-	protected abstract void PlayerCollision(GameObject player);
+	void OnCollisionEnter(Collision col) { 
+		if(col.gameObject.tag == "Player") {
+			PlayerCollision(col.gameObject);
+		}
+	}
+
+	protected virtual void PlayerTrigger(GameObject player) {
+	}
+
+	protected virtual void PlayerCollision(GameObject player) {
+	}
 }

@@ -5,8 +5,10 @@ using UnityEngine.UI;
 public class UIManager : MonoBehaviour {
 
 	public Text gatesPassed;
-	public Text timer;
-	public Text finalScore; 
+	public Text[] timer;
+	public Text[] bestTime;
+	public Text[] finalScore; 
+	public Text[] bestScore;
 
 	public GameObject gameMenu;
 	public GameObject pauseMenu;
@@ -21,7 +23,9 @@ public class UIManager : MonoBehaviour {
 	private void Update() {
 		DisplayGatePassed();
 		DisplayTimer();
+		DisplayBestTime();
 		DisplayFinalScore();
+		DisplayBestScore();
 		GameStatus();
 	}
 
@@ -30,13 +34,28 @@ public class UIManager : MonoBehaviour {
 	}
 
 	private void DisplayTimer() {
-		timer.text = "Timer : " + GameManager.instance.TimerSinceStart().ToString("f3");
+		for(int i = 0; i < timer.Length; i++) {
+			timer[i].text = GameManager.instance.TimerSinceStart().ToString("f3");
+		}
+	}
+
+	private void DisplayBestTime() {
+		for(int i = 0; i < bestTime.Length; i++) {
+			bestTime[i].text = GameManager.instance.BestTime().ToString();
+		}
 	}
 
 	private void DisplayFinalScore() {
-		finalScore.text = GameManager.instance.CalculateScore().ToString("f1");
+		for(int i = 0; i < finalScore.Length; i++) {
+			finalScore[i].text = GameManager.instance.CalculateScore().ToString("f1");
+		}
 	}
-	
+
+	private void DisplayBestScore() {
+		for(int i = 0; i < bestScore.Length; i++) {
+			bestScore[i].text = GameManager.instance.BestScore().ToString();
+		}
+	}
 
 	private void GameStatus() {
 		switch(GameManager.instance.gameStatus) 

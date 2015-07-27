@@ -24,6 +24,9 @@ public class GameManager : MonoBehaviour {
 
 	private ShipMovement _shipMovement;
 	private bool calculateTime = true;
+
+	private float[] _levelTime = new float[3];
+	private float[] _levelScore = new float[3];
 	
 	void Awake () {
 		CreateGameManagerSingleton();
@@ -41,18 +44,21 @@ public class GameManager : MonoBehaviour {
 
 	private void Start() {
 		for(int i = 0; i < doorList.Count; i++) {
-			doorList[i].GetComponent<Door>().index = i;
+			doorList[i].GetComponent<DoorTrigger>().index = i;
 		}
 
 		player = GameObject.FindGameObjectWithTag("Player");
 		_shipMovement = player.GetComponent<ShipMovement>();
+
+		_levelScore = PlayerPrefsX.GetFloatArray("score");
+		_levelTime = PlayerPrefsX.GetFloatArray("time");
 	}
 
 	public void UpdateDoorList(int indexToRemove) {
 		_numberGatePassed++;
 		doorList.RemoveAt(indexToRemove);
 		for(int i = 0; i < doorList.Count; i++) {
-			doorList[i].GetComponent<Door>().index = i;
+			doorList[i].GetComponent<DoorTrigger>().index = i;
 		}
 	}
 
@@ -73,6 +79,10 @@ public class GameManager : MonoBehaviour {
 
 	private void Lose() {
 		if(maxRaceTime < _playerTime) {
+			gameStatus = GAME_STATUS.LOSE;
+		}
+
+		if(player == null) {
 			gameStatus = GAME_STATUS.LOSE;
 		}
 	}
@@ -105,7 +115,7 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public float CalculateScore() {
-		float finalScore = maxRaceTime - _playerTime;
+		float finalScore = (maxRaceTime - _playerTime) * _numberGatePassed;
 		return finalScore;
 	}
 
@@ -128,11 +138,13 @@ public class GameManager : MonoBehaviour {
 			case GAME_STATUS.WIN :
 				_shipMovement.shipMoving = false;
 				calculateTime = false;
+				SaveScoreAndTime();
 			break;
 
 			case GAME_STATUS.LOSE :
 				_shipMovement.shipMoving = false;
 				calculateTime = false;
+				SaveScoreAndTime();
 			break;
 
 			case GAME_STATUS.PAUSE :
@@ -140,6 +152,26 @@ public class GameManager : MonoBehaviour {
 				calculateTime = false;
 			break;
 		}
+	}
+
+	private void SaveScoreAndTime() {
+		if(CalculateScore() < _levelScore[Application.loadedLevel-1]) {
+			_levelScore[Application.loadedLevel-1] = CalculateScore();
+			PlayerPrefsX.SetFloatArray("score", _levelScore);
+		}
+
+		if(TimerSinceStart() < _levelTime[Application.loadedLevel-1]) {
+			_levelTime[Application.loadedLevel-1] = TimerSinceStart();
+			PlayerPrefsX.SetFloatArray("time", _levelTime);
+		}
+	}
+
+	public float BestScore() {
+		return _levelScore[Application.loadedLevel-1];
+	}
+
+	public float BestTime() {
+		return _levelTime[Application.loadedLevel-1];
 	}
 
 }

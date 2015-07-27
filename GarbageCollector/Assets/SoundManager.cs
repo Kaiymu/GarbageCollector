@@ -5,8 +5,9 @@ public class SoundManager : MonoBehaviour {
 
 	public static SoundManager instance;
 
-	public AudioClip _cameraSound;
-	
+	public AudioClip doorTriggerSound;
+	public AudioClip playerExplosion;
+
 	private AudioSource _mainCameraSource;
 
 	void Awake () {
@@ -32,7 +33,11 @@ public class SoundManager : MonoBehaviour {
 	
 	}
 
-	public void PlayDooSound() {
-		_mainCameraSource.PlayOneShot(_cameraSound);
+	public void PlayDoorSound() {
+		_mainCameraSource.PlayOneShot(doorTriggerSound);
+	}
+
+	public void PlayPlayerExplosionSound() {
+		_mainCameraSource.PlayOneShot(playerExplosion);
 	}
 }

@@ -1,11 +1,21 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class DoorMesheCollider : MonoBehaviour {
+public class DoorMesheCollider : CollisionHandler {
 
-	private void OnCollisionEnter(Collision col) {
-		if(col.gameObject.tag == "Player") {
-			Destroy(col.gameObject);
-		}
+	public GameObject explosion;
+
+	private GameObject _player;
+
+	protected override void PlayerCollision(GameObject player) {
+		explosion.transform.position = player.transform.position;
+		explosion.SetActive(true);
+		_player = player;
+		SoundManager.instance.PlayPlayerExplosionSound();
+		Destroy (_player);
+	}
+
+	private void DisappearPlayer() {
+		_player.GetComponent<MeshRenderer>().enabled = false;
 	}
 }
