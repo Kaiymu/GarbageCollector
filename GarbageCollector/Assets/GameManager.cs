@@ -2,6 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 
+public enum GAME_STATUS {START, WIN, LOSE, PAUSE};
+
 public class GameManager : MonoBehaviour {
 	
 	public static GameManager instance;
@@ -19,7 +21,6 @@ public class GameManager : MonoBehaviour {
 	private int _numberGatePassed = 0;
 	private float _playerTime = 0f;
 
-	public enum GAME_STATUS {START, WIN, LOSE, PAUSE};
 	public GAME_STATUS gameStatus;
 
 	private ShipMovement _shipMovement;
@@ -27,6 +28,8 @@ public class GameManager : MonoBehaviour {
 
 	private float[] _levelTime = new float[3];
 	private float[] _levelScore = new float[3];
+
+	public string statusTest;
 	
 	void Awake () {
 		CreateGameManagerSingleton();
@@ -50,10 +53,22 @@ public class GameManager : MonoBehaviour {
 		player = GameObject.FindGameObjectWithTag("Player");
 		_shipMovement = player.GetComponent<ShipMovement>();
 
-		_levelScore = PlayerPrefsX.GetFloatArray("score");
-		_levelTime = PlayerPrefsX.GetFloatArray("time");
+		FillLevelTimeArray();
+		FillLevelTimeArray();
 	}
 
+	private void FillLevelTimeArray() {
+		_levelTime[0] = PlayerPrefs.GetFloat("timelvl1");
+		_levelTime[1] = PlayerPrefs.GetFloat("timelvl2");
+		_levelTime[2] = PlayerPrefs.GetFloat("timelvl3");
+	}
+
+	private void FillLevelScoreArray() {
+		_levelScore[0] = PlayerPrefs.GetFloat("scorelvl1");
+		_levelScore[1] = PlayerPrefs.GetFloat("scorelvl2");
+		_levelScore[2] = PlayerPrefs.GetFloat("scorelvl3");
+	}
+	
 	public void UpdateDoorList(int indexToRemove) {
 		_numberGatePassed++;
 		doorList.RemoveAt(indexToRemove);
@@ -68,22 +83,27 @@ public class GameManager : MonoBehaviour {
 		Lose();
 
 		GameStatus();
+
+		Debug.Log (_levelScore[Application.loadedLevel-1]);
 	}
 
 	private void Win() {
 		if(doorList.Count == 0) {
 			CalculateScore();
 			gameStatus = GAME_STATUS.WIN;
+			statusTest = gameStatus.ToString();
 		}
 	}
 
 	private void Lose() {
 		if(maxRaceTime < _playerTime) {
 			gameStatus = GAME_STATUS.LOSE;
+			statusTest = gameStatus.ToString();
 		}
 
 		if(player == null) {
 			gameStatus = GAME_STATUS.LOSE;
+			statusTest = gameStatus.ToString();
 		}
 	}
 
@@ -93,8 +113,10 @@ public class GameManager : MonoBehaviour {
 		if(isPause) {
 			previousStatus = gameStatus;
 			gameStatus = GAME_STATUS.PAUSE;
+			statusTest = gameStatus.ToString();
 		} else {
 			gameStatus = previousStatus;
+			statusTest = gameStatus.ToString();
 		}
 	}
 
@@ -131,8 +153,8 @@ public class GameManager : MonoBehaviour {
 		switch(gameStatus) 
 		{
 			case GAME_STATUS.START :
-			_shipMovement.shipMoving = true;
-			calculateTime = true;
+				_shipMovement.shipMoving = true;
+				calculateTime = true;
 			break;
 
 			case GAME_STATUS.WIN :
@@ -155,23 +177,33 @@ public class GameManager : MonoBehaviour {
 	}
 
 	private void SaveScoreAndTime() {
-		if(CalculateScore() < _levelScore[Application.loadedLevel-1]) {
-			_levelScore[Application.loadedLevel-1] = CalculateScore();
-			PlayerPrefsX.SetFloatArray("score", _levelScore);
+		int indexLevel = Application.loadedLevel-1;
+		_levelScore[indexLevel] = 50;
+		_levelTime[indexLevel] = 50;
+		if(CalculateScore() < _levelScore[indexLevel]) {
+			_levelScore[indexLevel] = CalculateScore();
+			PlayerPrefs.SetFloat("scorelvl"+indexLevel, _levelScore[Application.loadedLevel]);
 		}
 
-		if(TimerSinceStart() < _levelTime[Application.loadedLevel-1]) {
-			_levelTime[Application.loadedLevel-1] = TimerSinceStart();
-			PlayerPrefsX.SetFloatArray("time", _levelTime);
+		if(TimerSinceStart() < _levelTime[indexLevel]) {
+			_levelTime[indexLevel] = TimerSinceStart();
+			PlayerPrefs.SetFloat("timelvl"+indexLevel, _levelTime[Application.loadedLevel]);
 		}
 	}
 
 	public float BestScore() {
-		return _levelScore[Application.loadedLevel-1];
+		if(_levelScore[Application.loadedLevel-1] != null) {
+			return _levelScore[Application.loadedLevel-1];
+		}
+
+		return 999f;
 	}
 
 	public float BestTime() {
-		return _levelTime[Application.loadedLevel-1];
+		if(_levelTime[Application.loadedLevel-1] != null) {
+			return _levelTime[Application.loadedLevel-1];
+		} 
+		return 999f;
 	}
 
 }

@@ -10,6 +10,7 @@ public class UIManager : MonoBehaviour {
 	public Text[] finalScore; 
 	public Text[] bestScore;
 
+	public Text _debug;
 	public GameObject gameMenu;
 	public GameObject pauseMenu;
 	public GameObject winMenu; 
@@ -21,13 +22,15 @@ public class UIManager : MonoBehaviour {
 		maxDoorToPass = GameManager.instance.doorList.Count;
 	}
 	private void Update() {
+
+		GameStatus();
 		DisplayGatePassed();
 		DisplayTimer();
-		DisplayBestTime();
 		DisplayFinalScore();
 		DisplayBestScore();
-		GameStatus();
+		DisplayBestTime();
 	}
+
 
 	private void DisplayGatePassed() {
 		gatesPassed.text = "Gates : " + GameManager.instance.doorList.Count + " / " + maxDoorToPass;
@@ -60,19 +63,19 @@ public class UIManager : MonoBehaviour {
 	private void GameStatus() {
 		switch(GameManager.instance.gameStatus) 
 		{
-		case GameManager.GAME_STATUS.START :
+		case GAME_STATUS.START :
 			ActivateDesactivateMenu(true, false, false, false);
 			break;
 			
-		case GameManager.GAME_STATUS.WIN :
+		case GAME_STATUS.WIN :
 			ActivateDesactivateMenu(false, false, true, false);
 			break;
 			
-		case GameManager.GAME_STATUS.LOSE :
+		case GAME_STATUS.LOSE :
 			ActivateDesactivateMenu(true, false, false, true);
 			break;
 			
-		case GameManager.GAME_STATUS.PAUSE :
+		case GAME_STATUS.PAUSE :
 			ActivateDesactivateMenu(true, true, false, false);
 			break;
 		}
